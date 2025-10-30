@@ -1,23 +1,36 @@
 #include <Servo.h>
+//global int values
 Servo servo;
 int angle = 10;
-int in1 = 8;
-int in2 = 7;
+int buttonstate = 0;
+//pins
+const int servopin = 6;
+const int in1 = 8;
+const int in2 = 7;
+const int buttonpin = 2;
 //global time library
-//launcher timing
-int Ltaction = 2000, Ltlaunch = 3000, Ltdrive = 4000;
+//State 1 timing
+//State 2 timing
+const int Ltaction = 2000, Ltlaunch = 3000, Ltdrive = 4000;
 
 void setup() {
   // put your setup code here, to run once:
-servo.attach(6);
+servo.attach(servopin);
 servo.write(angle);
  // Set pins as outputs
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
+  pinMode(buttonpin, INPUT)
 }
 
 void loop() {
   int state = 0;
+  //state control
+buttonstate = digitalRead(buttonPin);
+if(buttonstate == HIGH){
+  ++state;
+}
+
  if(state == 0){
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
