@@ -11,16 +11,16 @@ servo.write(angle);
  // Set pins as outputs
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
-
-  // Start with motor stopped
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
 }
 
 void loop() {
- int state = 0;
+  int state = 0;
+ if(state == 0){
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+ }
 // STATE 1 DRIVING FUNCTION
-while(state == 1){
+else if(state == 1){
     // ---- Forward ----
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
@@ -42,7 +42,7 @@ while(state == 1){
   delay(2000); // pause 2 seconds
 }
 //STATE 2 CATAPULT FUNCTION
- while(state == 2){
+ else if(state == 2){
   angle = 0;
   servo.write(angle);
  delay(2);
@@ -50,14 +50,6 @@ while(state == 1){
  servo.write(angle);
  delay(2);
  }
- while(state >= 3){
+ else
     state = 0;
- }
 }
-
-
-
-
-
-
-
