@@ -3,15 +3,17 @@
 Servo servo;
 int angle = 10;
 int buttonstate = 0;
+int buttonstate2 = 0;
 //pins
 const int servopin = 6;
 const int in1 = 8;
 const int in2 = 7;
 const int buttonpin = 2;
+const int buttonpin2 = 3;
 //global time library
 //State 1 timing
 //State 2 timing
-const int Ltaction = 2000, Ltlaunch = 3000, Ltdrive = 4000;
+const int Ltaction = 2000, Ltlaunch = 3000, Ltdrive = 4000, Ltstartup = 3000;
 
 void setup() {
   // put your setup code here, to run once:
@@ -27,8 +29,12 @@ void loop() {
   int state = 0;
   //state control
 buttonstate = digitalRead(buttonPin);
+buttonstate2 = digitalRead(buttonPin2);
 if(buttonstate == HIGH){
-  ++state;
+  state = 1 ;
+}
+if(buttonstate2 == HIGH){
+  state = 2 ;
 }
 
  if(state == 0){
@@ -59,6 +65,8 @@ else if(state == 1){
 }
 //STATE 2 CATAPULT FUNCTION
  else if(state == 2){
+ //start up
+ delay(Ltstartup)
  //drive forward
  digitalWrite(in1, HIGH);
  delay(Ltdrive);
