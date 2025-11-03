@@ -1,5 +1,5 @@
 #include <Servo.h>
-//global int values
+//global values
 Servo servo;
 int angle = 10;
 int buttonstate = 0;
@@ -23,6 +23,7 @@ servo.write(angle);
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
   pinMode(buttonpin, INPUT)
+  pinMode(buttonpin2, INPUT)
 }
 
 void loop() {
