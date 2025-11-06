@@ -1,13 +1,14 @@
 #include <Servo.h>
 //global values
+#define enA 6
+#define in1 9
+#define in2 8
 Servo servo;
 int angle = 10;
 int buttonstate = 0;
 int buttonstate2 = 0;
 //pins
-const int servopin = 6;
-const int in1 = 8;
-const int in2 = 7;
+const int servopin = 7;
 const int buttonpin = 2;
 const int buttonpin2 = 3;
 //global time library
@@ -22,20 +23,25 @@ servo.write(angle);
  // Set pins as outputs
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
-  pinMode(buttonpin, INPUT)
-  pinMode(buttonpin2, INPUT)
+  pinMode(enA, OUTPUT);
+  pinMode(buttonpin, INPUT_PULLUP);
+  pinMode(buttonpin2, INPUT_PULLUP);
+//start off
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(enA, HIGH);
 }
 
 void loop() {
-  int state = 0;
   //state control
-buttonstate = digitalRead(buttonPin);
-buttonstate2 = digitalRead(buttonPin2);
-if(buttonstate == HIGH){
+buttonstate = digitalRead(buttonpin);
+buttonstate2 = digitalRead(buttonpin2);
+if(buttonstate == LOW){
   state = 1 ;
 }
-if(buttonstate2 == HIGH){
-  state = 2 ;
+if(buttonstate2 == LOW){
+launchscript();
+
 }
 
  if(state == 0){
@@ -64,10 +70,11 @@ else if(state == 1){
   digitalWrite(in2, LOW);
   delay(2000); // pause 2 seconds
 }
-//STATE 2 CATAPULT FUNCTION
- else if(state == 2){
- //start up
- delay(Ltstartup)
+}
+
+void launchscript(){
+//start up
+ delay(Ltstartup);
  //drive forward
  digitalWrite(in1, HIGH);
  delay(Ltdrive);
@@ -80,8 +87,4 @@ digitalWrite(in1, LOW);
  angle = 10;
  servo.write(angle);
  delay(Ltaction);
- state = 0;
- }
- else
-    state = 0;
 }
