@@ -1,20 +1,21 @@
 #include <Servo.h>
 //global values
+#define enA 6
+#define in1 9
+#define in2 8
 Servo servo;
-int angle = 10;
+int angle = 360;
 int buttonstate = 0;
 int buttonstate2 = 0;
 //pins
-const int servopin = 6;
-const int in1 = 8;
-const int in2 = 7;
+const int servopin = 7;
 const int buttonpin = 2;
 const int buttonpin2 = 3;
 //global time library
 //State 1 timing
+const int Dtstop = 500, Dtstartup = 2000, Dtrevdrive = 6000, Dtfwddrive = 4750;
 //State 2 timing
-const int Ltaction = 2000, Ltlaunch = 3000, Ltdrive = 4000, Ltstartup = 3000;
-
+const int Ltreset = 2000, Ltlaunch = 3000, Ltdrive = 3500, Ltstartup = 2000;
 void setup() {
   // put your setup code here, to run once:
 servo.attach(servopin);
@@ -22,66 +23,60 @@ servo.write(angle);
  // Set pins as outputs
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
-  pinMode(buttonpin, INPUT)
-  pinMode(buttonpin2, INPUT)
+  pinMode(enA, OUTPUT);
+  pinMode(buttonpin, INPUT_PULLUP);
+  pinMode(buttonpin2, INPUT_PULLUP);
+//start off
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(enA, HIGH);
 }
 
 void loop() {
-  int state = 0;
   //state control
-buttonstate = digitalRead(buttonPin);
-buttonstate2 = digitalRead(buttonPin2);
-if(buttonstate == HIGH){
-  state = 1 ;
-}
-if(buttonstate2 == HIGH){
-  state = 2 ;
-}
-
- if(state == 0){
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
- }
-// STATE 1 DRIVING FUNCTION
-else if(state == 1){
-    // ---- Forward ----
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  delay(3000); // run 3 seconds
-
-  // ---- Stop ----
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  delay(1000); // pause 1 second
-
-  // ---- Reverse ----
+buttonstate = digitalRead(buttonpin);
+buttonstate2 = digitalRead(buttonpin2);
+if(buttonstate == LOW){
+  delay(Dtstartup);
+// ---- Forward ----
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  delay(3000); // run 3 seconds
+  delay(Dtfwddrive); 
 
   // ---- Stop ----
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
-  delay(2000); // pause 2 seconds
+  delay(Dtstop); 
+
+  // ---- Reverse ----
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  delay(Dtrevdrive); 
+
+  // ---- Stop ----
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  delay(Dtstop); 
 }
-//STATE 2 CATAPULT FUNCTION
- else if(state == 2){
- //start up
- delay(Ltstartup)
+if(buttonstate2 == LOW){
+//start up
+ delay(Ltstartup);
  //drive forward
- digitalWrite(in1, HIGH);
+ digitalWrite(in2, HIGH);
  delay(Ltdrive);
-digitalWrite(in1, LOW);
+digitalWrite(in2, LOW);
+ delay(500);
+ digitalWrite(in2, HIGH);
+ delay(Ltdrive);
+ digitalWrite(in2, LOW);
  delay(Ltlaunch);
   //trigger mousetrap
   angle = 360;
   servo.write(angle);
- delay(Ltaction);
- angle = 10;
+ delay(Ltreset);
+ angle = 300;
  servo.write(angle);
- delay(Ltaction);
- state = 0;
- }
- else
-    state = 0;
+ delay(1000);
+}
+
 }
